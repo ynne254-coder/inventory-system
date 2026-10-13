@@ -172,7 +172,11 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
         try:
             if barcode:
                 url = f"{current_app.config['OPENFOODFACTS_URL']}/product/{barcode}.json"
-                response = requests.get(url, timeout=8)
+                response = requests.get(
+                    url,
+                    headers={"User-Agent": "InventoryManagementSystem/1.0"},
+                    timeout=8,
+                )
                 response.raise_for_status()
                 payload = response.json()
                 if payload.get("status") != 1:
@@ -182,6 +186,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 response = requests.get(
                     f"{current_app.config['OPENFOODFACTS_URL']}/search",
                     params={"search_terms": name, "page_size": 1, "json": 1},
+                    headers={"User-Agent": "InventoryManagementSystem/1.0"},
                     timeout=8,
                 )
                 response.raise_for_status()
